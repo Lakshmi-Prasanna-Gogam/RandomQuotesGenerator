@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login & Signup</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#f6f8fa;
+}
+
+.container{
+    width:540px;
+    background:#fff;
+    border-radius:18px;
+    box-shadow:0 15px 35px rgba(0,0,0,.15);
+    padding:40px 45px;
+}
+
+.form{
+    display:none;
+}
+
+.form.active{
+    display:block;
+}
+
+h1{
+    text-align:center;
+    font-size:38px;
+    font-weight:500;
+    color:#061b4e;
+    margin-bottom:45px;
+}
+
+.row{
+    display:flex;
+    align-items:center;
+    margin-bottom:28px;
+}
+
+label{
+    width:120px;
+    font-size:18px;
+    color:#000;
+}
+
+input{
+    flex:1;
+    height:32px;
+    border:1px solid #c8d3e9;
+    border-radius:10px;
+    padding:0 12px;
+    font-size:15px;
+    outline:none;
+}
+
+input:focus{
+    border-color:#2d347a;
+}
+
+button{
+    width:100%;
+    margin-top:15px;
+    padding:15px;
+    border:none;
+    border-radius:10px;
+    background:#2f347c;
+    color:#fff;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.3s;
+}
+
+button:hover{
+    background:#232960;
+}
+
+.bottom{
+    margin-top:25px;
+    text-align:center;
+    font-size:17px;
+    color:#60708f;
+}
+
+.bottom a{
+    color:#1d2b78;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.bottom a:hover{
+    text-decoration:underline;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <!-- LOGIN -->
+    <div class="form active" id="login">
+
+        <h1>Login to your account</h1>
+
+        <div class="row">
+            <label>Email:</label>
+            <input type="email" placeholder="Enter your email" id="loginEmail">
+        </div>
+
+        <div class="row">
+            <label>Password:</label>
+            <input type="password" placeholder="Enter your password" id="loginPassword">
+        </div>
+
+        <button onclick="loginUser()">Login</button>
+
+        <div class="bottom">
+            Don't have an account?
+            <a href="#" onclick="showSignup()">Sign Up</a>
+        </div>
+
+    </div>
+
+    <!-- SIGNUP -->
+    <div class="form" id="signup">
+
+        <h1>Create Account</h1>
+
+        <div class="row">
+            <label>Username:</label>
+            <input type="text" placeholder="Enter your Name" id="signupUsername">
+        </div>
+
+        <div class="row">
+            <label>Password:</label>
+            <input type="password" placeholder="Enter your password" id="signupPassword">
+        </div>
+
+        <div class="row">
+            <label>Email:</label>
+            <input type="email" placeholder="Enter your email" id="signupEmail">
+        </div>
+
+        <button onclick="registerUser()">Sign Up</button>
+
+        <div class="bottom">
+            Already have an account?
+            <a href="#" onclick="showLogin()">Login</a>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+function showSignup(){
+    document.getElementById("login").classList.remove("active");
+    document.getElementById("signup").classList.add("active");
+}
+
+function showLogin(){
+    document.getElementById("signup").classList.remove("active");
+    document.getElementById("login").classList.add("active");
+}
+
+window.onload = function () {
+    if (window.location.hash === "#signup") {
+        showSignup();
+    } else {
+        showLogin();
+    }
+};
+
+async function registerUser() {
+
+    const username = document.getElementById("signupUsername").value.trim();
+    const email = document.getElementById("signupEmail").value.trim();
+    const password = document.getElementById("signupPassword").value.trim();
+
+    const response = await fetch("/register", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            username,
+            email,
+            password
+        })
+    });
+
+    const data = await response.json();
+
+    alert(data.msg);
+
+    if (response.ok) {
+        showLogin();
+    }
+}
+
+async function loginUser() {
+
+    const email = document.getElementById("loginEmail").value.trim();
+    const password = document.getElementById("loginPassword").value.trim();
+
+    const response = await fetch("/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            email,
+            password
+        })
+    });
+
+    const data = await response.json();
+
+    alert(data.msg);
+
+    if (response.ok) {
+        localStorage.setItem("userId", data.userId);
+        localStorage.setItem("username", data.username);
+
+        window.location.href = "HomePage.html";
+    }
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,130 @@
+/* Reset default styles */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Body styling */
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: url("bckg.png") no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+}
+
+.hero {
+    width: 70%;
+    max-width: 900px;
+    min-height: 400px;
+    margin: 80px auto;
+    padding: 50px 40px;
+
+    /* Center content */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    /* Glass effect */
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(10px);
+
+    /* White border */
+    border: 5px solid white;
+    border-radius: 15px;
+
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.hero h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+.hero p {
+    font-size: 1rem;
+    margin-bottom: 35px;
+    line-height: 1.6;
+}
+
+.hero .btn {
+    padding: 15px 35px;
+    font-size: 1.1rem;
+}
+
+/* Navbar */
+nav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 60px;
+}
+
+nav h1{
+    margin: 0;
+}
+
+.nav-links{
+    display: flex;
+    gap: 15px;
+}
+
+.login-btn,
+.signup-btn{
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 900;
+
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    color: white;
+    border: 2px solid white;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.login-btn:hover, 
+.signup-btn:hover{
+  transform: scale(1.05);
+}
+
+
+nav a {
+color: white;
+text-decoration: none;
+font-size: 16px;
+transition: 0.3s;
+}
+
+nav a:hover {
+color: #ffd700;
+}
+
+
+
+/* Button */
+.btn {
+padding: 12px 25px;
+background: #ffd700;
+color: black;
+text-decoration: none;
+border-radius: 25px;
+font-weight: bold;
+transition: 0.3s;
+}
+
+.btn:hover {
+background: white;
+transform: scale(1.05);
+}

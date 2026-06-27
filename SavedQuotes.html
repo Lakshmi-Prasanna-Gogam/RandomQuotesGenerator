@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saved Quotes</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+}
+
+body{
+background: linear-gradient(to right, #fcfcfc);
+color:rgb(13, 13, 121);
+display:flex;
+flex-direction:column;
+align-items:center;
+min-height:100vh;
+padding:40px;
+text-align:center;
+}
+
+h1{
+margin-bottom:30px;
+}
+
+.container{
+width:800px;
+max-width:100%;
+}
+
+.quote{
+background:#06196c;
+padding:15px;
+margin:12px 0;
+border-radius:10px;
+color:white;
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+.actions{
+display:flex;
+justify-content:flex-end;
+gap:10px;
+}
+
+.btn{
+background:white;
+border:none;
+color:#081f83;
+padding:6px 14px;
+border-radius:6px;
+cursor:pointer;
+font-size:14px;
+}
+
+.back-btn{
+margin-top:25px;
+padding:12px 28px;
+background:linear-gradient(135deg,#1b263b,#415a77);
+color:white;
+border:none;
+border-radius:12px;
+cursor:pointer;
+font-size:15px;
+font-weight:600;
+box-shadow:0 8px 18px rgba(27,38,59,0.25);
+transition:0.3s;
+}
+
+.back-btn:hover{
+transform:translateY(-3px);
+box-shadow:0 12px 25px rgba(27,38,59,0.35);
+background:linear-gradient(135deg,#415a77,#1b263b);
+}
+
+.back-btn:active{
+transform:scale(0.96);
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>Saved Quotes</h1>
+
+<div class="container" id="savedQuotes"></div>
+
+<button class="back-btn" onclick="goBack()">
+← Back to Home
+</button>
+
+
+<script>
+
+const container = document.getElementById("savedQuotes");
+
+
+// Display Quotes
+
+async function displayQuotes(){
+
+    const userId = localStorage.getItem("userId");
+
+    const response = await fetch(`/savedQuotes/${userId}`);
+
+    const quotes = await response.json();
+
+
+    if(quotes.length === 0){
+
+        container.innerHTML = "<p>No saved quotes yet.</p>";
+        return;
+
+    }
+
+
+    let html = "";
+
+
+    quotes.forEach(q=>{
+
+
+        const text = `"${q.quote}" - ${q.author}`;
+
+        const encodedText = encodeURIComponent(text);
+
+
+        html += `
+
+        <div class="quote">
+
+            <span>${text}</span>
+
+
+            <div class="actions">
+
+
+                <button class="btn"
+                onclick="shareQuote('${encodedText}')">
+                    Share
+                </button>
+
+
+
+                <button class="btn"
+                onclick="deleteQuote('${q._id}')">
+                    Delete
+                </button>
+
+
+            </div>
+
+
+        </div>
+
+        `;
+
+    });
+
+
+
+    container.innerHTML = html;
+
+}
+
+
+
+// Share Quote
+
+async function shareQuote(text){
+
+
+    const decoded = decodeURIComponent(text);
+
+
+    const userId = localStorage.getItem("userId");
+
+
+
+    const analyticsResponse = await fetch("/updateAnalytics",{
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+
+        body:JSON.stringify({
+
+            userId:userId,
+
+            type:"share"
+
+        })
+
+    });
+
+
+
+    console.log(
+        "Share analytics updated:",
+        analyticsResponse.ok
+    );
+
+
+
+
+
+    if(navigator.share){
+
+
+        navigator.share({
+
+            text:decoded
+
+        });
+
+
+    }
+    else{
+
+
+        navigator.clipboard.writeText(decoded);
+
+        alert("Copied! You can paste anywhere 👍");
+
+
+    }
+
+
+}
+
+
+
+// Delete Quote
+
+async function deleteQuote(id){
+
+
+    const response = await fetch(`/deleteQuote/${id}`,{
+
+        method:"DELETE"
+
+    });
+
+
+
+    if(response.ok){
+
+        displayQuotes();
+
+    }
+
+
+}
+
+
+
+// Back
+
+function goBack(){
+
+    window.location.href="HomePage.html";
+
+}
+
+
+
+// Load Page + View Analytics
+
+async function loadPage(){
+
+    await displayQuotes();
+
+    const userId = localStorage.getItem("userId");
+
+    if(!userId){
+        console.log("No userId found");
+        return;
+    }
+    const result = await response.json();
+
+    console.log("View event sent:",result);
+
+}
+
+loadPage();
+
+
+</script>
+
+
+</body>
+</html>
